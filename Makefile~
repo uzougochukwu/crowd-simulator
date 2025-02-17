@@ -1,0 +1,7 @@
+build:
+	nasm -felf64 -gdwarf ./src/*.asm -o game.o
+	ld game.o -o game
+run:
+	./game
+clean:
+	rm game
