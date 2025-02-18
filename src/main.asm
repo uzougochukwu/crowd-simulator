@@ -28,12 +28,14 @@ conspiracylength:	equ $-conspiracy
 injury:	db "This is the after action report. No fatalities reported, 4 minor injuries amongst guests.",0ah,"Should we cover this up?"
 injurylength:	equ $-injury
 
-framebuffer:	equ "/dev/fb0"
+framebuffer:
+	db "/dev/fb0", 0
 
 %include	"mman-flags.h"
+%include	"fcntl-flags.h"
 
 %define MMAP_FLAGS \
-	MAP_SHARED | MAP_ANONYMOUS | MAP_GROWSDOWN	
+	MAP_PRIVATE | MAP_ANONYMOUS | MAP_GROWSDOWN	
 
 	section .bss
 	answer resq 8
@@ -124,12 +126,19 @@ exit:
 
 graphics_intro:
 
+	mov rax, 0x02
+	mov rdi, framebuffer
+	mov rsi, O_RDWR
+	syscall
+
+	mov r8, rax
+
 	mov rax, 0x09
 	mov rdi, framebuffer
 	mov rsi, 4096
 	mov rdx, PROT_WRITE
 	mov r10, MMAP_FLAGS
-	mov r8, 0x0
+	;; r8 contains file descriptor which was in rax after open syscall on framebuffer file
 	mov r9, 0x0
 	syscall
 	ret
