@@ -30,6 +30,8 @@ injurylength:	equ $-injury
 
 framebuffer:	equ "/dev/fb0"
 
+%include	"mman-flags.h"
+
 	section .bss
 	answer resq 8
 	answer2 resb 1
@@ -119,5 +121,8 @@ exit:
 
 graphics_intro:
 
-	mov r11, 0x1
+	mov rax, 0x09
+	mov rdi, framebuffer
+	mov rsi, 4096
+	
 	ret
