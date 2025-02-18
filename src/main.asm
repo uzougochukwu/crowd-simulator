@@ -32,6 +32,9 @@ framebuffer:	equ "/dev/fb0"
 
 %include	"mman-flags.h"
 
+%define MMAP_FLAGS \
+	MAP_SHARED | MAP_ANONYMOUS | MAP_GROWSDOWN	
+
 	section .bss
 	answer resq 8
 	answer2 resb 1
@@ -124,5 +127,9 @@ graphics_intro:
 	mov rax, 0x09
 	mov rdi, framebuffer
 	mov rsi, 4096
-	
+	mov rdx, PROT_WRITE
+	mov r10, MMAP_FLAGS
+	mov r8, 0x0
+	mov r9, 0x0
+	syscall
 	ret
