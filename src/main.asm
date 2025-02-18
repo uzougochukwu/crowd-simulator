@@ -28,6 +28,8 @@ conspiracylength:	equ $-conspiracy
 injury:	db "This is the after action report. No fatalities reported, 4 minor injuries amongst guests.",0ah,"Should we cover this up?"
 injurylength:	equ $-injury
 
+framebuffer:	equ "/dev/fb0"
+
 	section .bss
 	answer resq 8
 	answer2 resb 1
@@ -44,22 +46,32 @@ _start:
 	mov rdx, IntroLength
 	syscall
 
+intro_input:
+
+	call graphics_intro	;; call in the graphics code for the intro section, then jmp to intro input
+	
 	mov rax, 0x0
 	mov rdi, 0x0
 	mov rsi, answer
 	mov rdx, 2
 	syscall
-
+	
 	mov al, [answer]
 
+	call graphics_intro
+	
 	cmp rax, 0x79
 	je death_script
 
+	call graphics_intro
+	
 	mov rax, 0x1
 	mov rdi, 0x1
 	mov rsi, injury
 	mov rdx, injurylength
 	syscall
+
+
 
 cover_up_decision:
 
@@ -103,3 +115,9 @@ cover_up:
 exit:	
 	mov rax, 0x3c
 	syscall
+
+
+graphics_intro:
+
+	mov r11, 0x1
+	ret
