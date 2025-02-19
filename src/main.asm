@@ -40,6 +40,7 @@ framebuffer:
 	section .bss
 	answer resq 8
 	answer2 resb 1
+	graphics resb 4096
 
 	section .text
 	global _start
@@ -131,6 +132,8 @@ graphics_intro:
 	mov rsi, O_RDWR
 	syscall
 
+	push rax
+
 	mov r8, rax
 
 	mov rax, 0x09
@@ -141,4 +144,15 @@ graphics_intro:
 	;; r8 contains file descriptor which was in rax after open syscall on framebuffer file
 	mov r9, 0x0
 	syscall
+
+	mov rax, 0x12
+	pop rdi 		;rdi now has file descriptor of framebuffer file
+
+	mov qword [graphics], 0x100
+	
+	mov rsi, graphics
+	mov rdx, 4096
+	mov r10, 0x0
+	syscall
+	
 	ret
