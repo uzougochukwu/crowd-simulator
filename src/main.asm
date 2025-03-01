@@ -23,22 +23,11 @@ conspiracylength:	equ $-conspiracy
 injury:	db "This is the after action report. No fatalities reported, 4 minor injuries amongst guests.",0ah,"Should we cover this up?"
 injurylength:	equ $-injury
 
-framebuffer:
-	db "/dev/fb0", 0
-
-%include	"mman-flags.h"
-%include	"fcntl-flags.h"
-
-%define MMAP_FLAGS \
-	MAP_PRIVATE | MAP_ANONYMOUS | MAP_GROWSDOWN
-
-width equ 1024
-width equ 768
 
 	section .bss
 	answer resq 8
 	answer2 resb 1
-	graphics resb 4096
+
 
 	section .text
 	global _start
@@ -54,7 +43,6 @@ _start:
 
 intro_input:
 
-	call graphics_intro	;; call in the graphics code for the intro section, then jmp to intro input
 	
 	mov rax, 0x0
 	mov rdi, 0x0
@@ -64,12 +52,9 @@ intro_input:
 	
 	mov al, [answer]
 
-	call graphics_intro
-	
+
 	cmp rax, 0x79
 	je death_script
-
-	call graphics_intro
 	
 	mov rax, 0x1
 	mov rdi, 0x1
@@ -123,34 +108,4 @@ exit:
 	syscall
 
 
-graphics_intro:
 
-	mov rax, 0x02
-	mov rdi, framebuffer
-	mov rsi, O_RDWR
-	syscall
-
-	push rax
-
-	mov r8, rax
-
-	mov rax, 0x09
-	mov rdi, framebuffer
-	mov rsi, 4096
-	mov rdx, PROT_WRITE
-	mov r10, MMAP_FLAGS
-	;; r8 contains file descriptor which was in rax after open syscall on framebuffer file
-	mov r9, 0x0
-	syscall
-
-	mov rax, 0x12
-	pop rdi 		;rdi now has file descriptor of framebuffer file
-
-	mov byte [graphics], al
-	
-	mov rsi, graphics
-	mov rdx, 4096
-	mov r10, 0x0
-	syscall
-	
-	ret
