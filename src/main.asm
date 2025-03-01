@@ -1,9 +1,4 @@
-	;;  use a loop that moves each individual letter into the memory area that rsi points to, when you reach 0, print the string using write syscall
-	;; the memory should be stack allocated
-
-	;; try having the read syscall come immediately after the write syscall, this might explain why the first string ends at the correct tage, but the other strings go over the limit
-
-	;; try the other assemblers, tasm, yasm, sasm, gas and masm, see which works
+	;; might not need mmap syscall, might be better to simply modify stack memory, then write that memory to the framebuffer
 
 	default rel
 	
@@ -35,7 +30,10 @@ framebuffer:
 %include	"fcntl-flags.h"
 
 %define MMAP_FLAGS \
-	MAP_PRIVATE | MAP_ANONYMOUS | MAP_GROWSDOWN	
+	MAP_PRIVATE | MAP_ANONYMOUS | MAP_GROWSDOWN
+
+width equ 1024
+width equ 768
 
 	section .bss
 	answer resq 8
@@ -148,7 +146,7 @@ graphics_intro:
 	mov rax, 0x12
 	pop rdi 		;rdi now has file descriptor of framebuffer file
 
-	mov qword [graphics], 0x100
+	mov byte [graphics], al
 	
 	mov rsi, graphics
 	mov rdx, 4096
