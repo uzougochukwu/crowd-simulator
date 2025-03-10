@@ -6,4 +6,12 @@ Make sure that the framebuffer (/dev/fb0) is enabled. If it isn't, follow these 
 
 When you run the game file, you may get an error saying 'bash: ./game: Permission denied'. To fix this add executable permission to the file owner (which is now you) using the command chmod +x game
 
-You may need to switch to TTY mode by pressing Ctrl + Alt + F3 to run this program. To switch back press Ctrl + Alt + F2.
+Your user will need to be added to the video group
+
+sudo usermod -a -G video username
+
+groups username
+
+You need to switch to TTY3 by pressing Ctrl + Alt + F3 to run this program. To switch back press Ctrl + Alt + F2.
+
+TTY3 doesn't use a windowing system like X11 or Wayland, so you can see the output of the program.
