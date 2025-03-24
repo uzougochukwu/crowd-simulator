@@ -1,6 +1,6 @@
 
-	%include "/home/calebmox/graphical-output/library/system/syscalls.asm"
-
+	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
+	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_info.asm"
 
 	section .bss
 
@@ -16,7 +16,12 @@ _start:
 	syscall
 	
 	mov rdi, rax
-	add rdi, 4096			;add 5 bytes to the first address 	
+	call query_framebuffer
+
+	mov rax, [total_framebuffer_memory]
+
+
+	add rdi, rax			;add framebuffer memory size to rdi so that address break is increased	
 	
 	mov rax, __NR_brk
 	syscall

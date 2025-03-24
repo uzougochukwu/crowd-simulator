@@ -1,24 +1,23 @@
 	;; push all the registers that are modified in this routine onto the stack and pop them at the end
 	;; remove the _start symbol and put ret at the end
 	;; this script should be included in the heap_init script
+	;; need to establish which register (if any) contains overall memory requirement
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 
-section .data
-	
-framebuffer: db `/dev/fb0\0`
 
-section .bss
-framebuffer_info: resb 1280 
-x:	resb 10
-y:	resb 10
-bits_per_pixel:	 resb 10
-total_framebuffer_memory: resb 10
-	
 	
 	section .text
-	global _start
+	global query_framebuffer
 
-_start:
+query_framebuffer:	
+
+	push rax
+	push rdi
+	push rsi
+	push rdx
+	push r8
+	push r10
+	push r11
 
 
 	
@@ -53,7 +52,25 @@ _start:
 
 
 
-	mov rax, __NR_exit
-	syscall
+	pop r11
+	pop r10
+	pop r8
+	pop rdx
+	pop rsi
+	pop rdi
+	pop rax
 
+	ret
+
+	
+section .data
+	
+framebuffer: db `/dev/fb0\0`
+
+section .bss
+framebuffer_info: resb 1280 
+x:	resb 10
+y:	resb 10
+bits_per_pixel:	 resb 10
+total_framebuffer_memory: resb 10
 	
