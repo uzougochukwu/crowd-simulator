@@ -1,0 +1,42 @@
+
+
+best guess of how simple 2D graphics works:
+
+use ioctl to get info on the framebuffer
+
+then allocate memory on the heap since stack memory is a maximum of 1 million bytes usually, and the framebuffer will be roughly 5 million - 50 million bytes
+
+initialise the framebuffer
+
+then do a loop of:
+
+do the drawing operations in the heap memory
+
+write to framebuffer
+
+clear framebuffer
+
+until exit
+
+
+reality of how 2D graphics work:
+
+initialise a heap
+
+initialise the framebuffer by opening it
+	   - allocate some memory on the heap
+	   - get framebuffer info using ioctl syscall
+	   - allocate some memory on the heap
+
+in a loop:
+
+do the drawing operations in heap memory
+
+clear the framebuffer
+
+write to the framebuffer (also known as flushing to the framebuffer)
+
+
+exit:
+
+
