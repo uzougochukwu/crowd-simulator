@@ -4,6 +4,16 @@
 	;; need to establish which register (if any) contains overall memory requirement
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 
+section .data
+	
+framebuffer: db `/dev/fb0\0`
+
+section .bss
+framebuffer_info: resb 1280 
+x:	resb 10
+y:	resb 10
+bits_per_pixel:	 resb 10
+total_framebuffer_memory: resb 10
 
 	
 	section .text
@@ -63,14 +73,5 @@ query_framebuffer:
 	ret
 
 	
-section .data
-	
-framebuffer: db `/dev/fb0\0`
 
-section .bss
-framebuffer_info: resb 1280 
-x:	resb 10
-y:	resb 10
-bits_per_pixel:	 resb 10
-total_framebuffer_memory: resb 10
 	
