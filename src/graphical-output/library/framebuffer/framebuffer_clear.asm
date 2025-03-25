@@ -2,24 +2,44 @@
 	;; add framebuffer memory size to that to get end point
 	;; loop through every pixel (using 32 bits per pixel as the increment, which means we add 4 to address as referencing is in bytes) to set the screen to a standard colour
 
+	;; have rsi as the start address, move rsi into rcx and add total framebuffer memory/8 (to convert from bits to bytes) to it
+	;;  rcx is now the end address
+	;;  now loop from address in rsi to address in rcx
+	;;  rdi contains colour
+	;;  may need to have separate framebuffer address
+	;; the first memory address found by the first brk syscall in heap_init may be the framebuffer address, we then calculate framebuffer size as normal
+	;; when we write to the framebufffer, we modify a separate memory address and then we write to the actual framebuffer
+	;;  now create the framebuffer_flush
 
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 
+framebuffer_clear:	
 
 	push rsi
-	push rdi
-	push rax
+
+
+	push rcx
+
 	
 	mov rsi, framebuffer
 
-	mov dword [rsi], 0xFFFFFFFF ; this is setting up a pixel in the framebuffer memory at rsi
+	mov rcx, [total_framebuffer_memory]
 
-	mov rdi, 0x2		; file descriptor of framebuffer
-	mov rax, __NR_write
-	syscall
+	shr rcx, 2		; divide by 8 to convert bits to bytes
 
-	pop rax
-	pop rdi
+loop:
+	
+	mov dword [rsi], edi ; this is setting up a pixel in the framebuffer memory at rsi
+
+	add rsi, 4
+	dec rcx
+
+	jnz loop
+
+
+	pop rcx
+
+	
 	pop rsi
 
 	ret
