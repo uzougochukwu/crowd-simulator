@@ -12,6 +12,7 @@
 	;;  now create the framebuffer_flush
 
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
+	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_info.asm"
 
 framebuffer_clear:	
 
@@ -21,7 +22,7 @@ framebuffer_clear:
 	push rcx
 
 	
-	mov rsi, framebuffer
+	mov rsi, framebuffer_address
 
 	mov rcx, [total_framebuffer_memory]
 

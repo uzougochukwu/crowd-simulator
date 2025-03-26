@@ -3,6 +3,7 @@
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_info.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_clear.asm"
 
+
 	section .bss
 
 brk_firstlocation:	 resq 1
@@ -15,6 +16,8 @@ brk_firstlocation:	 resq 1
 _start:
 	mov rax, __NR_brk
 	syscall
+
+	mov qword [brk_firstlocation], rax
 	
 	mov rdi, rax
 	call query_framebuffer
@@ -29,11 +32,12 @@ _start:
 
 	xor rdi, rdi		; this is the colour that framebuffer_clear will set the screen to
 
-	call framebuffer_clear
+	;; add framebuffer clear here
 
 	mov rdi, [framebuffer]
-	call framebuffer_flush
 
+	;;  add framebuffer flush here
+	
 	mov rax, __NR_exit
 	syscall
 

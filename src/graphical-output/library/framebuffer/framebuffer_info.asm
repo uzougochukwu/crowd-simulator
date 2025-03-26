@@ -14,6 +14,7 @@ x:	resb 10
 y:	resb 10
 bits_per_pixel:	 resb 10
 total_framebuffer_memory: resb 10
+framebuffer_address:	resb 10
 
 	
 	section .text
