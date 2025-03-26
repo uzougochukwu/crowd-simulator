@@ -1,6 +1,5 @@
 
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
-	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_info.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_clear.asm"
 
 
