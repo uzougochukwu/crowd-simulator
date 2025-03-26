@@ -31,7 +31,7 @@ _start:
 
 	xor rdi, rdi		; this is the colour that framebuffer_clear will set the screen to
 
-	;; add framebuffer clear here
+call framebuffer_clear	;; add framebuffer clear here
 
 	mov rdi, [framebuffer]
 

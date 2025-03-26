@@ -10,6 +10,8 @@
 	;; the first memory address found by the first brk syscall in heap_init may be the framebuffer address, we then calculate framebuffer size as normal
 	;; when we write to the framebufffer, we modify a separate memory address and then we write to the actual framebuffer
 	;;  now create the framebuffer_flush
+	%ifndef FRAMEBUFFER_CLEAR
+	%define FRAMEBUFFER_CLEAR
 
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_info.asm"
@@ -22,7 +24,7 @@ framebuffer_clear:
 	push rcx
 
 	
-	mov rsi, framebuffer_address
+	mov rsi, [framebuffer_address]
 
 	mov rcx, [total_framebuffer_memory]
 
@@ -46,3 +48,4 @@ loop:
 	ret
 
 	
+%endif

@@ -14,3 +14,8 @@ there must be a single trail for a command definition
 framebuffer_clear gets info on size of memory to clear from framebuffer_info
 
 heap_init gets the size of heap needed from framebuffer_clear
+
+
+--------------
+
+see if using ifndef endif will solve all file path issues

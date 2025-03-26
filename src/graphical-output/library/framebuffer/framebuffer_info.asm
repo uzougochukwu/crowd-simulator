@@ -2,8 +2,12 @@
 	;; remove the _start symbol and put ret at the end
 	;; this script should be included in the heap_init script
 	;; need to establish which register (if any) contains overall memory requirement
+	%ifndef QUERY_FRAMEBUFFER
+	%define QUERY_FRAMEBUFFER
+	
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 
+	
 section .data
 	
 framebuffer: db `/dev/fb0\0`
@@ -30,7 +34,8 @@ query_framebuffer:
 	push r10
 	push r11
 
-
+	mov rax, [brk_firstlocation] ; get the first brk location from heap_init.asm
+	mov qword [framebuffer_address], rax ; get value in rax into framebuffer_address
 	
 	mov rax, __NR_open	; get file descriptor of framebuffer
 	mov rdi, framebuffer
@@ -75,4 +80,4 @@ query_framebuffer:
 
 	
 
-	
+%endif
