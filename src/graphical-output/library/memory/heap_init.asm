@@ -33,7 +33,10 @@ _start:
 
 call framebuffer_clear	;; add framebuffer clear here
 
-	mov rdi, [framebuffer]
+
+check_fb_address:	
+
+	mov rdi, [framebuffer_address]
 
 	;;  add framebuffer flush here
 	
