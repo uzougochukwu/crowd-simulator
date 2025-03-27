@@ -38,6 +38,7 @@ call framebuffer_clear	;; add framebuffer clear here
 	;;  add framebuffer flush here
 	
 	mov rax, __NR_exit
+	mov rdi, 0x0
 	syscall
 
 

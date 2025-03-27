@@ -2,6 +2,7 @@
 	;; remove the _start symbol and put ret at the end
 	;; this script should be included in the heap_init script
 	;; need to establish which register (if any) contains overall memory requirement
+	;;  need to shr 3 on framebuffer size to convert to bytes
 	%ifndef QUERY_FRAMEBUFFER
 	%define QUERY_FRAMEBUFFER
 	
@@ -63,6 +64,8 @@ query_framebuffer:
 	imul r8, r11		; bits_per_pixel * y
 	imul r8, r10		; (bits_per_pixel * y) * x
 	;; r8 contains total number of bits needed for framebuffer
+
+	shr r8, 3		; convert from bytes to bits
 
 	mov qword [total_framebuffer_memory], r8
 

@@ -9,6 +9,7 @@
 	;;  may need to have separate framebuffer address
 	;; the first memory address found by the first brk syscall in heap_init may be the framebuffer address, we then calculate framebuffer size as normal
 	;; when we write to the framebufffer, we modify a separate memory address and then we write to the actual framebuffer
+	;; investigate value in total_framebuffer_memory
 	;;  now create the framebuffer_flush
 	%ifndef FRAMEBUFFER_CLEAR
 	%define FRAMEBUFFER_CLEAR
@@ -28,7 +29,7 @@ framebuffer_clear:
 
 	mov rcx, [total_framebuffer_memory]
 
-	shr rcx, 2		; divide by 8 to convert bits to bytes
+	shr rcx, 3		; divide by 8 to convert bits to bytes
 
 loop:
 	

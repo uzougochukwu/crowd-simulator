@@ -1,0 +1,63 @@
+check that you have roughly the correct values in framebuffer address and framebuffer size
+
+-----
+in framebuffer)clear.asm
+
+maybe shr rcx, 2 should become shr rcx, 3
+
+-----
+
+check that you are referencing memory address correctly
+
+--------
+in heap_init.asm
+maybe mov qword [brk_firstlocation], rax should be mov brk_firstlocation, rax
+
+but that is probably illegal
+
+in framebuffer_info.asm
+
+mov rax, [brk_firstlocation] might become mov rax, brk_firstlocation
+
+and mov qword [framebuffer_address], rax might become mov framebuffer_address, rax
+
+
+-------
+
+check how to debug the signal exit code
+
+--------
+
+
+
+--------
+check that the memory you are addressing is within the program acceptable area
+
+-----
+
+
+-----
+
+check the xmdi code for heap allocation, see if there is anything you must include
+
+----
+
+
+
+-----
+
+find out whether rsi needs to be incremented by 4
+
+-----
+
+seems to be right
+
+------
+
+find out whether the shr commands are the correct amount
+
+------
+
+changing from shr 2 to shr 3 seems to have fixed the seg fault
+
+------
