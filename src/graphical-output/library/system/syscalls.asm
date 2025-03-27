@@ -406,5 +406,10 @@
 %define stdout 0x1
 %define stderr 0x2
 
+	;; lseek flags
+%define seek_set	0 	; 	Seek from beginning of file. 
+%define seek_cur	1	; Seek from current position.
+%define seek_end	2	; Seek from end of file.
+
 
 %endif 

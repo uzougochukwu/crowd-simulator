@@ -1,6 +1,7 @@
 
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_clear.asm"
+	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_flush.asm"
 
 
 	section .bss
@@ -29,16 +30,14 @@ _start:
 	mov rax, __NR_brk
 	syscall
 
-	xor rdi, rdi		; this is the colour that framebuffer_clear will set the screen to
+	mov rdi, 0x1FF00FFE5		; this is the colour that framebuffer_clear will set the screen to (cyan)
 
-call framebuffer_clear	;; add framebuffer clear here
+	call framebuffer_clear	;; add framebuffer clear here
 
-
-check_fb_address:	
 
 	mov rdi, [framebuffer_address]
 
-	;;  add framebuffer flush here
+	call framebuffer_flush	;;  add framebuffer flush here
 	
 	mov rax, __NR_exit
 	mov rdi, 0x0

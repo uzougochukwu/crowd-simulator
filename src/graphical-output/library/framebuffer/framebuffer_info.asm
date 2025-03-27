@@ -20,6 +20,7 @@ y:	resb 10
 bits_per_pixel:	 resb 10
 total_framebuffer_memory: resb 10
 framebuffer_address:	resb 10
+framebuffer_file_descriptor:	resb 10
 
 	
 	section .text
@@ -43,6 +44,7 @@ query_framebuffer:
 	mov rsi, o_wronly
 	syscall
 
+	mov qword [framebuffer_file_descriptor], rax
 	mov rdi, rax		; move file descriptor into rdi
 	mov rsi, fbioget_vscreeninfo
 	mov rdx, framebuffer_info
