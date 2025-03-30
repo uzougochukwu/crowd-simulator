@@ -29,7 +29,7 @@ framebuffer_clear:
 
 	mov rcx, [total_framebuffer_memory]
 
-	shr rcx, 3		; divide by 8 to convert bits to bytes
+	shr rcx, 2		; divide by 8 to convert bits to bytes, might try dividing by 4 to fill screen
 
 loop:
 	
