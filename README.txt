@@ -15,3 +15,5 @@ groups username
 You need to switch to TTY3 by pressing Ctrl + Alt + F3 to run this program. To switch back press Ctrl + Alt + F2.
 
 TTY3 doesn't use a windowing system like X11 or Wayland, so you can see the output of the program.
+
+If the application does something weird type in echo $? in the terminal and that will provide the memory address of the instruction where the error occured.

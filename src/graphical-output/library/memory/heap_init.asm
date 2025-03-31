@@ -2,7 +2,7 @@
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_clear.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_flush.asm"
-
+	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
 
 	section .bss
 
@@ -16,6 +16,17 @@ brk_firstlocation:	 resq 1
 _start:
 	mov rax, __NR_brk
 	syscall
+
+	cmp rax, 0x0
+	jge first_next
+
+	lea rcx, [_start]	; load address of _start label to rcx
+
+	mov qword [instruction_pointer], rcx ; move the address of the start label to the instruction_pointer memory location, in the error handling file
+
+	call error_handling
+
+first_next:	
 
 	mov qword [brk_firstlocation], rax
 	
