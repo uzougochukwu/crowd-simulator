@@ -17,12 +17,12 @@ _start:
 	mov rax, __NR_brk
 	syscall
 
-	cmp rax, 0x0
+	cmp rax, 0x0		; error handling
 	jge first_next
 
-	lea rcx, [_start]	; load address of _start label to rcx
+	lea rcx, [_start]	; error handling - load address of _start label to rcx
 
-	mov qword [instruction_pointer], rcx ; move the address of the start label to the instruction_pointer memory location, in the error handling file
+	mov qword [instruction_pointer], rcx ; error handling - move the address of the start label to the instruction_pointer memory location, in the error handling file
 
 	call error_handling
 
@@ -37,9 +37,23 @@ first_next:
 
 
 	add rdi, rax			;add framebuffer memory size to rdi so that address break is increased	
+
+second_brk_label:	
 	
 	mov rax, __NR_brk
 	syscall
+
+	cmp rax, 0x0		; error handling
+	jge second_next
+
+	lea rcx, [second_brk_label]	; error handling - load address of _start label to rcx
+
+	mov qword [instruction_pointer], rcx ; error handling - move the address of the start label to the instruction_pointer memory location, in the error handling file
+
+	call error_handling
+
+second_next:	
+	
 
 	mov rdi, 0x1FF00FFE5		; this is the colour that framebuffer_clear will set the screen to (cyan)
 
