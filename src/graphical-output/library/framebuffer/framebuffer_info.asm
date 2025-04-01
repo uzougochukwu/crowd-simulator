@@ -44,12 +44,16 @@ query_framebuffer:
 	mov rsi, o_wronly
 	syscall
 
+	call error_handling	; defined in syscalls.asm
+
 	mov qword [framebuffer_file_descriptor], rax
 	mov rdi, rax		; move file descriptor into rdi
 	mov rsi, fbioget_vscreeninfo
 	mov rdx, framebuffer_info
 	mov rax, __NR_ioctl
 	syscall
+
+	call error_handling
 
 	mov r8d, dword [framebuffer_info] ; each number in frame buffer info location is 32 bit, so we need 32 bit register
 	mov dword [x], r8d

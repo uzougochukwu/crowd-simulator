@@ -42,9 +42,7 @@ _start:
 	mov rdx, IntroLength
 	syscall
 
-	error_check intro_input _start ; error_check macro defined in syscalls.asm
-
-intro_input:
+	call error_handling	; defined in syscalls.asm
 
 	
 	mov rax, __NR_read
@@ -53,9 +51,7 @@ intro_input:
 	mov rdx, 2
 	syscall
 
-	error_check main_next intro_input ; error_check macro defined in syscalls.asm
-
-main_next:	
+	call error_handling
 
 	
 	mov al, [answer]
@@ -70,8 +66,7 @@ main_next:
 	mov rdx, injurylength
 	syscall
 
-	error_check cover_up_decision main_next
-
+	call error_handling
 
 cover_up_decision:
 
@@ -81,9 +76,7 @@ cover_up_decision:
 	mov rdx, 2
 	syscall
 
-	error_check main_second cover_up_decision
-	
-main_second:	
+	call error_handling
 	
 	mov al, [answer]
 	cmp rax, 0x79
@@ -98,8 +91,7 @@ death_script:
 	mov rdx, deathlength
 	syscall
 
-	error_check decision_next death_script
-
+	
 decision_next:	
 	jmp cover_up_decision
 
@@ -111,7 +103,8 @@ no_cover_up:
 	mov rdx, no_conspiracylength
 	syscall
 
-	error_check cover_up_next no_cover_up
+	call error_handling
+
 	
 cover_up_next:	
 	jmp exit
@@ -124,7 +117,7 @@ cover_up:
 	mov rdx, conspiracylength
 	syscall
 
-	error_check exit cover_up
+	call error_handling
 
 exit:	
 	mov rax, 0x3c

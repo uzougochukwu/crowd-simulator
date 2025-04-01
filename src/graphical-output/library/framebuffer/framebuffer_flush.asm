@@ -23,6 +23,8 @@ framebuffer_flush:
 	mov rdx, [total_framebuffer_memory]
 	syscall
 
+	call error_handling	; defined in syscalls.asm
+
 	;;  seek to byte 0 of the framebuffer
 	mov rax, __NR_lseek
 	movzx rdi, byte [framebuffer_file_descriptor]
@@ -30,6 +32,7 @@ framebuffer_flush:
 	mov rdx, seek_set
 	syscall
 
+	call error_handling
 
 	pop rax
 	pop rdx
