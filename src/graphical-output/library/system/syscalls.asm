@@ -1,4 +1,4 @@
-%ifndef _ASM_UNISTD_64_H
+
 %define _ASM_UNISTD_64_H
 
 %define __NR_read 0
@@ -412,4 +412,4 @@
 %define seek_end	2	; Seek from end of file.
 
 
-%endif 
+

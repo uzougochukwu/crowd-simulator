@@ -4,6 +4,21 @@
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_flush.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
 
+%ifndef error_check
+	
+%macro error_check 2	; the first parameter is the next label in the program, the second parameter is the previous label
+
+	cmp rax, 0x0		; if the value in rax is less than 0, then the system call resulted in an error
+	jge %1			; if rax is greater than or equal to 0 then jump to the next label
+
+	lea rcx, [%2]		; load the address of the previous label into rcx
+
+	mov qword [instruction_pointer], rcx ; move the address of the previous label to the instruction_pointer memory location, in the error handling file
+
+	call error handling
+%endmacro
+%endif
+
 	section .bss
 
 brk_firstlocation:	 resq 1
@@ -17,14 +32,7 @@ _start:
 	mov rax, __NR_brk
 	syscall
 
-	cmp rax, 0x0		; error handling
-	jge first_next
-
-	lea rcx, [_start]	; error handling - load address of _start label to rcx
-
-	mov qword [instruction_pointer], rcx ; error handling - move the address of the start label to the instruction_pointer memory location, in the error handling file
-
-	call error_handling
+	error_check first_next, _start ; error_check macro defined in syscalls.asm
 
 first_next:	
 
@@ -43,14 +51,7 @@ second_brk_label:
 	mov rax, __NR_brk
 	syscall
 
-	cmp rax, 0x0		; error handling
-	jge second_next
-
-	lea rcx, [second_brk_label]	; error handling - load address of _start label to rcx
-
-	mov qword [instruction_pointer], rcx ; error handling - move the address of the start label to the instruction_pointer memory location, in the error handling file
-
-	call error_handling
+	error_check second_next, second_brk_label
 
 second_next:	
 	

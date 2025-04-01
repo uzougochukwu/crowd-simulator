@@ -42,14 +42,7 @@ _start:
 	mov rdx, IntroLength
 	syscall
 
-	cmp rax, 0x0
-	jge intro_input
-
-	lea rcx, [_start]	; load address of _start label to rcx
-
-	mov qword [instruction_pointer], rcx ; move the address of the start label to the instruction_pointer memory location, in the error handling file
-
-	call error_handling
+	error_check intro_input _start ; error_check macro defined in syscalls.asm
 
 intro_input:
 
@@ -60,14 +53,7 @@ intro_input:
 	mov rdx, 2
 	syscall
 
-	cmp rax, 0x0
-	jge main_next
-
-	lea rcx, [intro_input]	; load address of _start label to rcx
-
-	mov qword [instruction_pointer], rcx ; move the address of the start label to the instruction_pointer memory location, in the error handling file
-
-	call error_handling
+	error_check main_next intro_input ; error_check macro defined in syscalls.asm
 
 main_next:	
 
@@ -84,15 +70,7 @@ main_next:
 	mov rdx, injurylength
 	syscall
 
-	cmp rax, 0x0
-	jge cover_up_decision
-
-	lea rcx, [main_next]	; load address of _start label to rcx
-
-	mov qword [instruction_pointer], rcx ; move the address of the start label to the instruction_pointer memory location, in the error handling file
-
-	call error_handling
-
+	error_check cover_up_decision main_next
 
 
 cover_up_decision:
@@ -103,14 +81,7 @@ cover_up_decision:
 	mov rdx, 2
 	syscall
 
-	cmp rax, 0x0
-	jge main_second
-
-	lea rcx, [cover_up_decision]	; load address of relevant label to rcx
-
-	mov qword [instruction_pointer], rcx ; move the address of the start label to the instruction_pointer memory location, in the error handling file
-
-	call error_handling
+	error_check main_second cover_up_decision
 	
 main_second:	
 	
@@ -127,14 +98,7 @@ death_script:
 	mov rdx, deathlength
 	syscall
 
-	cmp rax, 0x0
-	jge decision_next
-
-	lea rcx, [death_script]	; load address of relevant label to rcx
-
-	mov qword [instruction_pointer], rcx ; move the address of the relevant label to the instruction_pointer memory location, in the error handling file
-
-	call error_handling
+	error_check decision_next death_script
 
 decision_next:	
 	jmp cover_up_decision
@@ -147,14 +111,7 @@ no_cover_up:
 	mov rdx, no_conspiracylength
 	syscall
 
-	cmp rax, 0x0
-	jge cover_up_next
-
-	lea rcx, [no_cover_up]	; load address of relevant label to rcx
-
-	mov qword [instruction_pointer], rcx ; move the address of the relevant label to the instruction_pointer memory location, in the error handling file
-
-	call error_handling
+	error_check cover_up_next no_cover_up
 	
 cover_up_next:	
 	jmp exit
@@ -167,14 +124,7 @@ cover_up:
 	mov rdx, conspiracylength
 	syscall
 
-	cmp rax, 0x0
-	jge exit
-
-	lea rcx, [cover_up]	; load address of _start label to rcx
-
-	mov qword [instruction_pointer], rcx ; move the address of the start label to the instruction_pointer memory location, in the error handling file
-
-	call error_handling
+	error_check exit cover_up
 
 exit:	
 	mov rax, 0x3c
