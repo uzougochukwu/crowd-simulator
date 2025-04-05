@@ -3,6 +3,8 @@
 	;; this script should be included in the heap_init script
 	;; need to establish which register (if any) contains overall memory requirement
 	;;  need to shr 3 on framebuffer size to convert to bytes
+
+	;; queries framebuffer for x resolution, y resolution and bits per pixel. also gets file descriptor for framebuffer.
 	%ifndef QUERY_FRAMEBUFFER
 	%define QUERY_FRAMEBUFFER
 	

@@ -1,8 +1,13 @@
+;; queries the framebuffer to find out how much extra memory we need.
+	; might change to have colour in rsi rather than rdi
 
+
+	
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_clear.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_flush.asm"
-	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
+%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
+	%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_pixel.asm"
 
 
 	section .bss
@@ -37,15 +42,21 @@ _start:
 
 	call error_handling
 
-	mov rdi, 0x1FF00FFE5		; this is the colour that framebuffer_clear will set the screen to (cyan)
+	mov rdi, 0x1FFFFFFFF 		; this is the colour that framebuffer_clear will set the screen to (cyan)  0x1FF00FFE5, black is 0x1FF000000
 
-	call framebuffer_clear	;; add framebuffer clear here
-
+	call framebuffer_clear	
 
 	mov rdi, [framebuffer_address]
 
-	call framebuffer_flush	;;  add framebuffer flush here
-	
+	call framebuffer_flush
+
+	mov r11, 100
+	mov r12, 200
+	mov rsi, 0x1FF008C45
+
+	call set_pixel
+
+
 	mov rax, __NR_exit
 	mov rdi, 0x0
 	syscall

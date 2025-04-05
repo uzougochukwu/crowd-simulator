@@ -11,6 +11,8 @@
 	;; when we write to the framebufffer, we modify a separate memory address and then we write to the actual framebuffer
 	;; investigate value in total_framebuffer_memory
 	;;  now create the framebuffer_flush
+
+	;;  sets the framebuffer to be one colour
 	%ifndef FRAMEBUFFER_CLEAR
 	%define FRAMEBUFFER_CLEAR
 
@@ -29,7 +31,7 @@ framebuffer_clear:
 
 	mov rcx, [total_framebuffer_memory]
 
-	shr rcx, 2		; divide by 8 to convert bits to bytes, might try dividing by 4 to fill screen
+	shr rcx, 2		;  might try dividing by 4 to fill screen
 
 loop:
 	
