@@ -39,21 +39,43 @@ _start:
 
 	call error_handling
 
-	mov rdi, 0x1FFFFFFFF 		; this is the colour that framebuffer_clear will set the screen to (cyan)  0x1FF00FFE5, black is 0x1FF000000
+	mov rdi, 0x1FFFFFFFF 		; colour set to white
 
 	call framebuffer_clear	
 
-	call framebuffer_flush
 
 	mov r8, 100
 	mov r9, 200
-	mov rsi, 0x1FF008C45
+	mov rsi, 0x1FFF1C232
 
 	mov rdi, [framebuffer_address]
+	
+	call set_pixel
+
+
+	mov r8, 101
+	mov r9, 201
+
+
+	call set_pixel
+
+
+	mov r8, 102
+	mov r9, 202
+
+	call set_pixel
+
+
+
+	mov r8, 103
+	mov r9, 203
+
 
 	call set_pixel
 
 	call framebuffer_flush
+
+	
 
 
 	mov rax, __NR_exit
