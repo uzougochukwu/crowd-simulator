@@ -12,7 +12,7 @@
 	;; investigate value in total_framebuffer_memory
 	;;  now create the framebuffer_flush
 
-	;;  sets the framebuffer to be one colour
+	;;  sets the framebuffer to be 32 bit alpha-red-green-blue colour defined in rdi 
 	%ifndef FRAMEBUFFER_CLEAR
 	%define FRAMEBUFFER_CLEAR
 
@@ -22,8 +22,6 @@
 framebuffer_clear:	
 
 	push rsi
-
-
 	push rcx
 
 	
@@ -44,8 +42,6 @@ loop:
 
 
 	pop rcx
-
-	
 	pop rsi
 
 	ret

@@ -1,4 +1,7 @@
-	;; need to define registers for the width and height of the framebuffer
+%ifndef SET_PIXEL
+%define SET_PIXEL
+
+;; need to define registers for the width and height of the framebuffer
 	;;  no need for a routine to convert coordinates to memory, just do it in the calculation at the start
 	;; rsi should contain the colour we set the pixel too.
         ;; designate a register to contain the framebuffer start address, then add that address to the x and y coords multiplied by bytes per pixel
@@ -14,6 +17,7 @@
 	; change registers to match xmdi system
 	; the address is linear, but you are going through a rectanglar screen
 	; that is why you need to calculate P
+	; set pixel at x, y which is r8d, r9d in the framebuffer memory starting at rdi for a width x height image which is edx x ecx, to the colour value in esi
 
         %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_info.asm"
@@ -25,26 +29,35 @@ section .text
 
 	; P = ((y res - y coord - 1) * x res ) + x coord
 	; address = (4 * P) + start of framebuffer address
-	;
+	
 
 set_pixel:
+
+	push rcx
+	push rax
 	
-	mov r15, [y]		; y resolution into r15
-	mov r14, [x]		; x resolution into r14
+	mov ecx, [y]		; y resolution, which is height, into ecx
+	mov edx, [x]		; x resolution, which is width, into edx
 
 	; calculate P
 
-	sub r15, r12
-	dec r15
+	sub rcx, r9
+	dec rcx
 
-	imul r15, r14
-	add r15, r11
+	imul rcx, rdx
+	add rcx, r8
 
-	; P is stored in r15
-	imul r15, 4
-	add r15, [framebuffer_address]
-	
+	; P is stored in rcx
+	shl rcx, 2		; multiply P by 4 (because it is 4 bytes per pixel
 
-	mov dword [r15], esi
+	mov rax, 0xFFFFFFFF
+	and rax, rsi		; rsi contains the colour, we and rax with rsi so that the value is copied over
+
+	mov dword [rdi+rcx], eax ; rdi has start of framebuffer address
+
+	pop rax
+	pop rcx
 
 	ret
+
+%endif

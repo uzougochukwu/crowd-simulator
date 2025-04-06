@@ -1,7 +1,0 @@
-
-create code.asm
-create set line or circle or rectangle
-
-create exit.asm
-
-do a single line and test it out
