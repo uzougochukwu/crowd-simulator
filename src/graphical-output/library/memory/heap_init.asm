@@ -41,36 +41,15 @@ _start:
 
 	mov rdi, 0x1FFFFFFFF 		; colour set to white
 
-	call framebuffer_clear	
+	call framebuffer_clear ; framebuffer set to white
 
 
 	mov r8, 100
 	mov r9, 200
-	mov rsi, 0x1FFF1C232
+	mov rsi, 0x1FFF1C232	; pixel set to brown 
 
 	mov rdi, [framebuffer_address]
 	
-	call set_pixel
-
-
-	mov r8, 101
-	mov r9, 201
-
-
-	call set_pixel
-
-
-	mov r8, 102
-	mov r9, 202
-
-	call set_pixel
-
-
-
-	mov r8, 103
-	mov r9, 203
-
-
 	call set_pixel
 
 	call framebuffer_flush
