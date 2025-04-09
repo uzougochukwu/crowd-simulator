@@ -1,193 +1,200 @@
-	;; need to start with perceived x and y coordinates
-	;; then have routine to convert those coordinates into a memory location
-	;; then do all the drawing, using the bresenham methods
-	;; understand purpose of lseek and movzdx in framebuffer_flush
-	;; create internal rules about which register contains which data, so that calling routines work well together
-;; draw line between r8,r9 (x0, y0) and r10,r11 (x1, y1)
-	; using rdi as the start memory address and the colour in rsi
-
+%ifndef SET_LINE
+%define SET_LINE
 	
 
-	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
-	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_clear.asm"
-	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_flush.asm"
-	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
+;; create internal rules about which register contains which data, so that calling routines work well together
+;; draw line between r8,r9 (x0, y0) and r10,r11 (x1, y1)
+	; using rdi as the start memory address and the colour in rsi
+	; for image of rdx by rcx (width by height)
 
-	; use y = mx + c to test code
-	; rcx will contain m
-	; rdx will contain c
+        %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_pixel.asm"
+	
 	
 line_draw:
 
+	cmp r8, r10
+	je vertical_line
+	cmp r9, r11
+	je horizontal_line
 
-	; all coordinates double
-	shl r8, 1
-	shl r9, 1
+	push rax
+	push rbx
+	push r8
+	push r9
+	push r12
+	push r13
+	push r14
+	push r15
 
-	shl r10, 1
-	shl r11, 1
+	mov r12, r10
+	sub r12, r8
+	test r12, r12
+	jns abs_dx
+	neg r12
 
-	; setting up the calculation for m
-	mov r12, r9
+abs_dx:
 	mov r13, r11
-
-	sub r13, r12 		; r13 = y1 - y0
-
-	mov r12, r8
-	mov r14, r10
-
-	sub r14, r12		; r14 = x1 - x0
-
-	mov rax, r13
-	div r14			; m = (y1 - y0) / (x1 - x0). rax = m
-
-	mov rcx, rax		; rcx = m
+	sub r13, r9
+	test r13, r13
+	jns abs_dy
+	neg r13
 
 
-	; now calculating c using y - mx = c
-	mov r14, rcx
-	mov r15, r8		
+abs_dy:
 
-	imul r15, r14		; r15 = mx
+	cmp r13, r12
+	jge plot_line_up
 
-	mov rdx, r9
+plot_line_down:
+	cmp r8, r10
+	jle plot_down		; plot line down forwards
+	mov r12, r10
+	mov r10, r8
+	mov r8, r12
+	mov r12, r11
+	mov r11, r9
+	mov r9, r12
+	jmp plot_down		; plot line down backwards
 
-	sub rdx, r15 		; rdx = c
-	
-	
-	; rcx = m
+plot_line_up:
 
-	; rdx = c
-	
-	
-        ;; the code below tests all four surrounding pixels for line intersection
-	;; then divides the coords by two and uses the set_pixel function to colour in that pixel
+	cmp r9, r11
+	jle plot_up		; plot line up forwards
+	mov r12, r10
+	mov r10, r8
+	mov r8, r12
+	mov r12, r11
+	mov r11, r9
+	mov r9, r12
+	; plot line up backwards
 
-        ;; it tests the value in r8 and r9 (x0, x1) for whether or not they equal r10 and r11 (x1, y1)
-;; if they do, it stops and exits the program
+plot_up:
+	mov r12, r10
+	sub r12, r8		; dx = x1 - x0
+	mov r13, r11
+	sub r13, r9		; dy = y1 - y0
+	mov rax, 1		; x_step = 1
+	test r12, r12
+	jns plot_abs_dx
+	neg r12			; dx = -dx
+	neg rax			; x_step = -1
 
-	;; x, y is r8, r9
+plot_abs_dx:
+	mov rbx, r12
+	shl rbx, 1
+	mov r14, rbx		; 2*dx
+	sub rbx, r13		; D = 2dx-dy
+	mov r15, r13
+	shl r15, 1
+	sub r15, r14
+	neg r15			; 2dx-2dy
 
-;; upper pixel
+loop_up:
+	call set_pixel 		; draw the current pixel
+	cmp r9, r11		; if we're done, return
+	je ret
+	cmp rbx, 0		; if D <= 0, don't adjust x
+	jle dont_adjust_x
+	add r8, rax		; x += x_step
+	add rbx, r15		; D += (2dx-2dy)
+	inc r9			; y++
+	jmp loop_up
+dont_adjust_x:
+	add rbx, r14		; D += 2dx
+	inc r9			; y++
+	jmp loop_up
 
-upper_pixel:
-	
-	sub r9, 2		; decrease the y coordinate by two, in order to reach the pixel one above, must decrease because y coord increases as you go down screen, must decrease by 2 as we have previously doubled coords 
+plot_down:
+	mov r12, r10
+	sub r12, r8		; dx = x1-x0
+	mov r13, r11
+	sub r13, r9		; dy = y1-y0
+	mov rax, 1		; y_step = 1
+	test r13, r13
+	jns plot_abs_dy
+	neg r13			; dy = -dy
+	neg rax			; y_step = -1
 
-	; test how far away from the line it is
-	; use y = mx + c to see how close upper pixel is to the line
+plot_abs_dy:
+	mov rbx, r13
+	shl rbx, 1
+	mov r14, rbx		; 2*dy
+	sub rbx, r12		; D = 2dy - dx
+	mov r15, r12
+	shl r15, 1
+	sub r15, r14
+	neg r15			; 2dy-2dx
 
-	mov r15, rcx		; r15 = m
+loop_down:
+	call set_pixel		; draw the current pixel
+	cmp r8, r10		; if we're done, return
+	je ret
+	cmp rbx, 0		; if D <= 0, domt adjust y
+	jle dont_adjust_y
+	add r9, rax		; y += y_step
+	add rbx, r15		; D += (2dy-2dx)
+	inc r8			; x++
+	jmp loop_down
 
-	imul r15, r8		; r15 = mx
+dont_adjust_y:
+	add rbx, r14		; D += 2dy
+	inc r8			; x++
+	jmp loop_down
 
-	add r15, rdx		; r15 = mx + c, r15 = theoretical y
-
-	; have to test the scenario where actual y is greater than theoretical and the reverse
-
-	cmp r9, r15		; compare r9, y, with r15, theoretical y
-
-	jg upper_actual_greater ; if r9, y is greater than theoretical y, jump to upper_actual_greater
-
-	sub r15, r9		; since r9, y, is less than r15, theoretical y we do r15 - r9
-
-	cmp r15, 1		; compare the gap with 1
-
-	jg upper_actual_greater
-
-	; if the gap is more than one, go to upper actual greater (it could be two complement negative)
-	; then divide the coordinates by 2 and call the set_pixel routine
-	shr r9, 1
-	shr r8, 1
-
-	call set_pixel
-
-	; multiply by 2
-
-	shl r8, 1
-	shl r9, 1
-
-upper_actual_greater:
-
-	; r9, y, is greater than r15, theoretical y
-
-	mov rax, r9		; move r9, y, into rax so we dont modify r9
-	sub rax, r15		; do rax - r15
-
-	cmp rax, 1		; compare the difference with 1
-
-	jg left_pixel		; if the gap is greater than 1, check the left pixel
-
-	; else, divide the coords by 2 and call the set_pixel routine
-	shr r9, 1
-	shr r8, 1
-
-	call set_pixel
-	; multiply by 2
-
-	shl r8, 1
-	shl r9, 1
-
-left_pixel:
-
-	add r9, 2		; increase y coord by two, for reasons explained on line 72
-	sub r8, 2		; decrease x coord by two, to move to left pixel
-
-	; we have to go through the process to make r15 = mx again because we subtracted r9 from r15 earlier on
-	mov r15, rcx		; r15 = m
-	imul r15, r8		; r15 = mx
-
-	add r15, rdx		; r15 = mx + c, r15 = theoretical y
-
-	; have to test the scenario where actual y is greater than theoretical and the reverse
-
-	cmp r9, r15             ; compare r9, y, with r15, theoretical y
-
-	jg left_actual_greater
-
-	sub r15, r9             ; since r9, y, is less than r15, theoretical y we do r15 - r9
-
-	cmp r15, 1		; compare the gap with 1
-
-	jg left_actual_greater
-
-	; if the gap is more than one, go to upper actual greater (it could be two complement negative)
-	; then divide the coordinates by 2 and call the set_pixel routine
-
-	shr r9, 1
-	shr r8, 1
-
-	call set_pixel
-
-	; multiply by 2
-
-	shl r9, 1
-	shl r8, 1
-
-left_actual_greater:
-
-	; r9, y, is greater than r15, theoretical y
-
-	mov rax, r9		; move r9 into rax so we dont modify r9
-	sub rax, r15		; do rax - r15
-	
-	cmp rax, 1		; compare the difference with 1
-
-	jg bottom_pixel		; if the difference is greater than 1
-
-	shr r8, 1		; else divide the coords by 2 and call set pixel
-	shr r9, 1
-
-	call set_pixel
-
-	; multiply by 2
-	shl r8, 1
-	shl r9, 1
-
-bottom_pixel:
-	
-finished:
+ret:
+	pop r15
+	pop r14		
+	pop r13
+	pop r12
+	pop r9
+	pop r8
+	pop rbx
+	pop rax
 
 	ret
 
-	
+vertical_line:
+	push rax
+	push r9
+	push r11
+
+	cmp r9, r11
+	jl loop_vertical
+	mov rax, r9
+	mov r9, r11
+	mov r11, rax
+
+loop_vertical:
+	call set_pixel
+	inc r9
+	cmp r9, r11
+	jle loop_vertical
+
+	pop r11
+	pop r9
+	pop rax
+	ret
+
+horizontal_line:
+	push rax
+	push r8
+	push r10
+
+	cmp r8, r10
+	jl loop_horizontal
+	mov rax, r8
+	mov r8, r10
+	mov r10, rax
+
+loop_horizontal:
+	call set_pixel
+	inc r8
+	cmp r8, r10
+	jle loop_horizontal
+
+	pop r10
+	pop r8
+	pop rax
+	ret
+
+	%endif

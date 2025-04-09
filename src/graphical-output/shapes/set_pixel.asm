@@ -36,8 +36,8 @@ set_pixel:
 	push rcx
 	push rax
 	
-	mov ecx, [y]		; y resolution, which is height, into ecx
-	mov edx, [x]		; x resolution, which is width, into edx
+	mov rcx, [y]		; y resolution, which is height, into ecx
+	mov rdx, [x]		; x resolution, which is width, into edx
 
 	; calculate P
 

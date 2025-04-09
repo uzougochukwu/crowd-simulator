@@ -5,7 +5,8 @@
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_clear.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_flush.asm"
         %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
-	%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_pixel.asm"
+        %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_pixel.asm"
+	%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/line_draw.asm"
 
 	section .bss
 
@@ -44,13 +45,18 @@ _start:
 	call framebuffer_clear ; framebuffer set to white
 
 
-	mov r8, 100
-	mov r9, 200
-	mov rsi, 0x1FFF1C232	; pixel set to brown 
+
+	mov rsi, 0x1FFF1C232	; line set to brown 
 
 	mov rdi, [framebuffer_address]
 	
-	call set_pixel
+	mov r8, 100		; x0
+	mov r9, 200		; y0
+
+	mov r10, 30		; x1
+	mov r11, 15		; y1
+
+	call line_draw	
 
 	call framebuffer_flush
 
