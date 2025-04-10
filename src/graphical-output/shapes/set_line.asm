@@ -10,7 +10,7 @@
         %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_pixel.asm"
 	
 	
-line_draw:
+set_line:
 
 	cmp r8, r10
 	je vertical_line

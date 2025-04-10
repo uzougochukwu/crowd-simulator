@@ -6,7 +6,8 @@
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_flush.asm"
         %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
         %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_pixel.asm"
-	%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/line_draw.asm"
+%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_line.asm"
+	%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_rect.asm"
 
 	section .bss
 
@@ -53,10 +54,13 @@ _start:
 	mov r8, 100		; x0
 	mov r9, 200		; y0
 
-	mov r10, 30		; x1
-	mov r11, 15		; y1
+	mov r10, 300		; x1
+	mov r11, 100		; y1
 
-	call line_draw	
+	mov rdx, [x]		; rdx is x res, which is width
+	mov rcx, [y]		; rcx is y res, which is height
+
+	call set_rect	
 
 	call framebuffer_flush
 
