@@ -51,6 +51,9 @@ _start:
 	mov rsi, 0x1FFF1C232	; line set to brown 
 
 	mov rdi, [framebuffer_address]
+
+	mov rdx, [x]		; rdx is x res, which is width
+	mov rcx, [y]		; rcx is y res, which is height
 	
 	mov r8, 100		; x0
 	mov r9, 200		; y0
@@ -58,15 +61,26 @@ _start:
 	mov r10, 300		; x1
 	mov r11, 100		; y1
 
-	mov rdx, [x]		; rdx is x res, which is width
-	mov rcx, [y]		; rcx is y res, which is height
 
 	call set_filled_rect	
 
 	call framebuffer_flush
 
-	
+	mov rdi, 0x1FFFFFFFF 		; colour set to white
 
+	call framebuffer_clear ; framebuffer set to white
+
+	mov rdi, [framebuffer_address]
+
+	mov r8, 10		; x0
+	mov r9, 20		; y0
+
+	mov r10, 30		; x1
+	mov r11, 10		; y1
+
+	call set_filled_rect	
+
+	call framebuffer_flush
 
 	mov rax, __NR_exit
 	mov rdi, 0x0
