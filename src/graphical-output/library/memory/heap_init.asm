@@ -66,21 +66,31 @@ _start:
 
 	call framebuffer_flush
 
+
+	mov rcx, 100
+
+graphical_process:
+
+	
 	mov rdi, 0x1FFFFFFFF 		; colour set to white
 
 	call framebuffer_clear ; framebuffer set to white
 
 	mov rdi, [framebuffer_address]
 
-	mov r8, 10		; x0
-	mov r9, 20		; y0
 
-	mov r10, 30		; x1
-	mov r11, 10		; y1
 
 	call set_filled_rect	
 
 	call framebuffer_flush
+
+	inc r8			; increment x0 and x1 so the rectangle moves to the right
+	inc r10
+
+	dec rcx
+
+	cmp rcx, 0
+	jne graphical_process
 
 	mov rax, __NR_exit
 	mov rdi, 0x0
