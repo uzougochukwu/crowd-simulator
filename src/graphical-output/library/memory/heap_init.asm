@@ -7,7 +7,8 @@
         %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
         %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_pixel.asm"
 %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_line.asm"
-	%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_rect.asm"
+%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_rect.asm"
+	%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_filled_rect.asm"
 
 	section .bss
 
@@ -60,7 +61,7 @@ _start:
 	mov rdx, [x]		; rdx is x res, which is width
 	mov rcx, [y]		; rcx is y res, which is height
 
-	call set_rect	
+	call set_filled_rect	
 
 	call framebuffer_flush
 
