@@ -54,12 +54,18 @@ _start:
 
 	mov rdx, [x]		; rdx is x res, which is width
 	mov rcx, [y]		; rcx is y res, which is height
-	
-	mov r8, 100		; x0
-	mov r9, 200		; y0
 
-	mov r10, 300		; x1
-	mov r11, 100		; y1
+	; maximum y coord is y res, usually 1080
+	; maximum x coord is x res, usually 1920
+	; if you go out of the top left corner or bottom right corner
+        ; (framebuffer memory start and finish) you segfault
+	; if you go out the top or the bottom of the screen, you segfault
+	
+	mov r8, 400		; x0
+	mov r9, 450		; y0
+
+	mov r10, 900		; x1
+	mov r11, 950		; y1
 
 
 	call set_filled_rect	
@@ -79,13 +85,13 @@ graphical_process:
 	mov rdi, [framebuffer_address]
 
 
-
 	call set_filled_rect	
 
 	call framebuffer_flush
 
 	inc r8			; increment x0 and x1 so the rectangle moves to the right
 	inc r10
+
 
 	dec rcx
 
