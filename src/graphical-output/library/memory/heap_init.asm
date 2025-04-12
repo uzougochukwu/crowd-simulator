@@ -16,7 +16,7 @@ brk_firstlocation:	 resq 1
 
 section .data
 
-rectangles: dw 150,370, 300, 400 
+rectangles: dw 150, 370, 300, 400, 170, 420, 340, 430  
 	
 	section .text
 	global _start
@@ -76,19 +76,31 @@ graphical_process:
 
 	mov rdi, [framebuffer_address]
 
-	call set_filled_rect
-
 	mov r8w, word [rectangles]		; x0 
 	mov r9w, word [rectangles + 2]		; y0 
 
 	mov r10w, word [rectangles + 4]		; x1 
-	mov r11w, word [rectangles + 6]		; y1 	
+	mov r11w, word [rectangles + 6]		; y1
 
+	add r8, r15		; add r15 to x0 and x1 to move rectangles to the right
+	add r10, r15
+
+	call set_filled_rect
+
+	mov r8w, word [rectangles + 8]		; x0 
+	mov r9w, word [rectangles + 10]		; y0 
+
+	mov r10w, word [rectangles + 12]		; x1 
+	mov r11w, word [rectangles + 14]		; y1
+
+	add r8, r15		; add r15 to x0 and x1 to move rectangles to the right
+	add r10, r15
+
+	call set_filled_rect
 
 	call framebuffer_flush
 
-	add r8, r15		; add r15 to x0 and x1 to move rectangle to the right
-	add r10, r15
+
 
 	inc r15
 
