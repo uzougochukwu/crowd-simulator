@@ -16,7 +16,9 @@ brk_firstlocation:	 resq 1
 
 section .data
 
-rectangles: dw 160, 170, 200, 200, 160, 520, 200, 550, 160,700 ,200,730 
+rectangles: dw 160, 170, 200, 200, 160, 520, 200, 550, 160,700 ,200,730
+
+lines: dw 50,200 ,0, 150
 	
 	section .text
 	global _start
@@ -109,9 +111,24 @@ graphical_process:
 
 	call set_filled_rect
 
+	xor r8, r8
+	xor r9, r9
+	xor r10, r10
+	xor r11, r11
+
+	; draw the lines
+
+before_line:
+
+	mov r8w, word [lines]
+	mov r9w, word [lines + 2]
+
+	mov r10w, word [lines + 4]
+	mov r11w, word [lines + 6]
+
+	call set_line
+
 	call framebuffer_flush
-
-
 
 	inc r15
 
