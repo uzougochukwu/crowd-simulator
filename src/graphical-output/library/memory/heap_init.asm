@@ -6,8 +6,8 @@
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_flush.asm"
         %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
         %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_pixel.asm"
-%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_line.asm"
-%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_rect.asm"
+        %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_line.asm"
+        %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_rect.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_filled_rect.asm"
 
 	section .bss
@@ -16,7 +16,7 @@ brk_firstlocation:	 resq 1
 
 section .data
 
-rectangles: dw 400, 450, 900, 950 
+rectangles: dw 150,370, 300, 400 
 	
 	section .text
 	global _start
@@ -63,11 +63,7 @@ _start:
 	; if you go out of the top left corner or bottom right corner
         ; (framebuffer memory start and finish) you segfault
 	; if you go out the top or the bottom of the screen, you segfault
-	mov r8w, word [rectangles]		; x0 400
-	mov r9w, word [rectangles + 2]		; y0 450
 
-	mov r10w, word [rectangles + 4]		; x1 900
-	mov r11w, word [rectangles + 6]		; y1 950
 	
 	mov r15, 0
 
@@ -82,11 +78,11 @@ graphical_process:
 
 	call set_filled_rect
 
-	mov r8w, word [rectangles]		; x0 400
-	mov r9w, word [rectangles + 2]		; y0 450
+	mov r8w, word [rectangles]		; x0 
+	mov r9w, word [rectangles + 2]		; y0 
 
-	mov r10w, word [rectangles + 4]		; x1 900
-	mov r11w, word [rectangles + 6]		; y1 950	
+	mov r10w, word [rectangles + 4]		; x1 
+	mov r11w, word [rectangles + 6]		; y1 	
 
 
 	call framebuffer_flush
