@@ -1,5 +1,7 @@
 ;; queries the framebuffer to find out how much extra memory we need.
 	; might change to have colour in rsi rather than rdi
+%ifndef HEAP_INIT
+%define HEAP_INIT
 	
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 	%include "/home/calebmox/crowd-simulator/src/graphical-output/library/framebuffer/framebuffer_clear.asm"
@@ -8,11 +10,15 @@
         %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_pixel.asm"
         %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_line.asm"
         %include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_rect.asm"
-	%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_filled_rect.asm"
+%include "/home/calebmox/crowd-simulator/src/graphical-output/shapes/set_filled_rect.asm"
+
 
 	section .bss
 
 brk_firstlocation:	 resq 1
+
+line_colour: resd 1
+	
 
 section .data
 
@@ -74,7 +80,7 @@ graphical_process:
 	
 	mov rdi, 0x1FF4faf25 		; background colour set to green
 
-	mov rsi, 0x1FFF1C232	; line set to brown 
+	mov rsi, 0x1FFF1C232	; rectangle set to brown 
 
 	call framebuffer_clear ; framebuffer set to green
 
@@ -118,7 +124,7 @@ graphical_process:
 
 before_line:
 
-	mov rsi, 0x1FF2986cc	; set lines to blue
+	mov esi, [line_colour]	; set lines to colour determined by user
 
 	mov r8w, word [lines]
 	mov r9w, word [lines + 2]
@@ -165,7 +171,7 @@ before_line:
 	ret
 
 	
-
+%endif
 
 
 	

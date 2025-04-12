@@ -4,6 +4,7 @@
 %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
 %include "/home/calebmox/crowd-simulator/src/graphical-output/library/memory/heap_init.asm"
+
 	
 	
 	section .rodata
@@ -59,6 +60,8 @@ _start:
 
 	cmp rax, 0x79
 	je death_script
+
+	mov qword [line_colour],  0x1F2986cc ; if injury move blue to line_colour
 	
 	mov rax, __NR_write
 	mov rdi, 0x1
@@ -84,6 +87,8 @@ cover_up_decision:
 	jmp no_cover_up
 
 death_script:
+
+	mov qword [line_colour], 0x1F000000 ; make line_colour black if death script
 
 	mov rax, __NR_write
 	mov rdi, 0x1
@@ -119,11 +124,13 @@ cover_up:
 
 	call error_handling
 
-now_graphics:
+
+
+exit:
+
 
 	call heap_init
-
-exit:	
+	
 	mov rax, 0x3c
 	syscall
 
