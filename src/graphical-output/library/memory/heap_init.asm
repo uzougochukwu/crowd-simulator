@@ -18,7 +18,7 @@ section .data
 
 rectangles: dw 160, 170, 200, 200, 160, 520, 200, 550, 160,700 ,200,730
 
-lines: dw 0, 150, 50,160, 0, 180 , 50, 190, 0,220 , 200,230 , 210
+lines: dw 0, 150, 50,160, 0, 180 , 50, 190, 0,220 , 200,230 
 	
 	section .text
 	global _start
@@ -47,9 +47,9 @@ _start:
 
 	call error_handling
 
-	mov rdi, 0x1FFFFFFFF 		; colour set to white
+	mov rdi, 0x1FF4faf25 		; colour set to green
 
-	call framebuffer_clear ; framebuffer set to white
+	call framebuffer_clear ; framebuffer set to green
 
 
 
@@ -72,9 +72,11 @@ _start:
 graphical_process:
 
 	
-	mov rdi, 0x1FFFFFFFF 		; colour set to white
+	mov rdi, 0x1FF4faf25 		; background colour set to green
 
-	call framebuffer_clear ; framebuffer set to white
+	mov rsi, 0x1FFF1C232	; line set to brown 
+
+	call framebuffer_clear ; framebuffer set to green
 
 	mov rdi, [framebuffer_address]
 
@@ -116,6 +118,8 @@ graphical_process:
 
 before_line:
 
+	mov rsi, 0x1FF2986cc	; set lines to blue
+
 	mov r8w, word [lines]
 	mov r9w, word [lines + 2]
 
@@ -150,12 +154,11 @@ before_line:
 	call set_line
 
 
-
 	call framebuffer_flush
 
 	inc r15
 
-	cmp r15, 500
+	cmp r15, 800
 	jne graphical_process
 
 	mov rax, __NR_exit
