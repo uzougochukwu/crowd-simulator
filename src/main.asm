@@ -3,6 +3,8 @@
 	default rel
 %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
+%include "/home/calebmox/crowd-simulator/src/graphical-output/library/memory/heap_init.asm"
+	
 	
 	section .rodata
 
@@ -116,6 +118,10 @@ cover_up:
 	syscall
 
 	call error_handling
+
+now_graphics:
+
+	call heap_init
 
 exit:	
 	mov rax, 0x3c

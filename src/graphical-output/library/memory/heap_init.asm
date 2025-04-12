@@ -21,10 +21,10 @@ rectangles: dw 160, 170, 200, 200, 160, 520, 200, 550, 160,700 ,200,730
 lines: dw 0, 150, 50,160, 0, 180 , 50, 190, 0,220 , 200,230 
 	
 	section .text
-	global _start
 
 
-_start:
+
+heap_init:
 	mov rax, __NR_brk
 	syscall
 
@@ -161,9 +161,8 @@ before_line:
 	cmp r15, 800
 	jne graphical_process
 
-	mov rax, __NR_exit
-	mov rdi, 0x0
-	syscall
+
+	ret
 
 	
 
