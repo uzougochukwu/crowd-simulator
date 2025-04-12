@@ -18,7 +18,7 @@ section .data
 
 rectangles: dw 160, 170, 200, 200, 160, 520, 200, 550, 160,700 ,200,730
 
-lines: dw 50,200 ,0, 150
+lines: dw 0, 150, 50,160, 0, 180 , 50, 190, 0,220 , 200,230 , 210
 	
 	section .text
 	global _start
@@ -111,10 +111,6 @@ graphical_process:
 
 	call set_filled_rect
 
-	xor r8, r8
-	xor r9, r9
-	xor r10, r10
-	xor r11, r11
 
 	; draw the lines
 
@@ -126,13 +122,40 @@ before_line:
 	mov r10w, word [lines + 4]
 	mov r11w, word [lines + 6]
 
+	add r10, r15
+	add r11, r15
+
 	call set_line
+
+	mov r8w, word [lines + 8]
+	mov r9w, word [lines + 10]
+
+	mov r10w, word [lines + 12]
+	mov r11w, word [lines + 14]
+
+	add r10, r15
+	add r11, r15
+
+	call set_line
+
+	mov r8w, word [lines + 16]
+	mov r9w, word [lines + 18]
+
+	mov r10w, word [lines + 20]
+	mov r11w, word [lines + 22]
+
+	add r10, r15
+	add r11, r15
+
+	call set_line
+
+
 
 	call framebuffer_flush
 
 	inc r15
 
-	cmp r15, 1700
+	cmp r15, 500
 	jne graphical_process
 
 	mov rax, __NR_exit
