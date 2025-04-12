@@ -63,22 +63,13 @@ _start:
 	; if you go out of the top left corner or bottom right corner
         ; (framebuffer memory start and finish) you segfault
 	; if you go out the top or the bottom of the screen, you segfault
-
-before_draw:
-	
 	mov r8w, word [rectangles]		; x0 400
 	mov r9w, word [rectangles + 2]		; y0 450
 
 	mov r10w, word [rectangles + 4]		; x1 900
 	mov r11w, word [rectangles + 6]		; y1 950
-
-
-	call set_filled_rect	
-
-	call framebuffer_flush
-
-
-	mov r15, 1000
+	
+	mov r15, 0
 
 graphical_process:
 
@@ -89,17 +80,23 @@ graphical_process:
 
 	mov rdi, [framebuffer_address]
 
+	call set_filled_rect
 
-	call set_filled_rect	
+	mov r8w, word [rectangles]		; x0 400
+	mov r9w, word [rectangles + 2]		; y0 450
+
+	mov r10w, word [rectangles + 4]		; x1 900
+	mov r11w, word [rectangles + 6]		; y1 950	
+
 
 	call framebuffer_flush
 
-	inc r8			; increment x0 and x1 so the rectangle moves to the right
-	inc r10
+	add r8, r15		; add r15 to x0 and x1 to move rectangle to the right
+	add r10, r15
 
-	dec r15
+	inc r15
 
-	cmp r15, 0
+	cmp r15, 1000
 	jne graphical_process
 
 	mov rax, __NR_exit
