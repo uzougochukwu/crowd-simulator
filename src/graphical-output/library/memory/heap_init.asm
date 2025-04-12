@@ -14,6 +14,9 @@
 
 brk_firstlocation:	 resq 1
 
+section .data
+
+rectangles: dw 400, 450, 900, 950 
 	
 	section .text
 	global _start
@@ -60,12 +63,14 @@ _start:
 	; if you go out of the top left corner or bottom right corner
         ; (framebuffer memory start and finish) you segfault
 	; if you go out the top or the bottom of the screen, you segfault
-	
-	mov r8, 400		; x0
-	mov r9, 450		; y0
 
-	mov r10, 900		; x1
-	mov r11, 950		; y1
+before_draw:
+	
+	mov r8w, word [rectangles]		; x0 400
+	mov r9w, word [rectangles + 2]		; y0 450
+
+	mov r10w, word [rectangles + 4]		; x1 900
+	mov r11w, word [rectangles + 6]		; y1 950
 
 
 	call set_filled_rect	
@@ -73,7 +78,7 @@ _start:
 	call framebuffer_flush
 
 
-	mov rcx, 100
+	mov r15, 1000
 
 graphical_process:
 
@@ -92,10 +97,9 @@ graphical_process:
 	inc r8			; increment x0 and x1 so the rectangle moves to the right
 	inc r10
 
+	dec r15
 
-	dec rcx
-
-	cmp rcx, 0
+	cmp r15, 0
 	jne graphical_process
 
 	mov rax, __NR_exit

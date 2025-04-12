@@ -1,4 +1,4 @@
-	;; might not need mmap syscall, might be better to simply modify stack memory, then write that memory to the framebuffer
+
 
 	default rel
 %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
@@ -13,13 +13,11 @@ Intro:	db "Welcome to your new role as head of crowd security. Good luck!",0ah,"
 IntroLength:	equ $-Intro	
 
 	
-
 death:	db "This is the after action report. 17 people have been killed and over 100 people were injured, many severely.",0ah,"Should we cover this up?"
 deathlength:	equ $-death
 
 conspiracy:	db "Due to rowdy behaviour amongst fans, a riot developed, resulting in disaster."
 conspiracylength:	equ $-conspiracy
-
 
 
 injury:	db "This is the after action report. No fatalities reported, 4 minor injuries amongst guests.",0ah,"Should we cover this up?"
