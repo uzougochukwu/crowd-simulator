@@ -17,3 +17,17 @@ You need to switch to TTY3 by pressing Ctrl + Alt + F3 to run this program. To s
 TTY3 doesn't use a windowing system like X11 or Wayland, so you can see the output of the program.
 
 If the application does something weird type in echo $? in the terminal and that will provide the memory address of the instruction where the error occured.
+
+If you want to modify the code and then run it, do git clone https://github.com/uzougochukwu/crowd-simulator
+
+Then in the crowd-simulator folder run the following commands. Replace USER with your username.
+
+nasm -i/home/USER/crowd-simulator/ -felf64 -gdwarf ./src/*.asm -o ./src/game.o
+
+ld ./src/game.o -o game
+
+./game
+
+This is a video of what the program looks like when it runs: https://youtu.be/YC3ZaMMn42w
+
+
