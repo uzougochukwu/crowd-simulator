@@ -1,4 +1,4 @@
-![Image of the game](./Crowd-game-image.png)
+![Image of the game](Crowd-game-image.png)
 
 For Linux only.
 
