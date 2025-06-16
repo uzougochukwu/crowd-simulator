@@ -1,3 +1,5 @@
+![Image of the game](./Crowd-game-image.png)
+
 For Linux only.
 
 Download the 'game' file to use.
