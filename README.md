@@ -30,6 +30,60 @@ ld ./src/game.o -o game
 
 ./game
 
+The error handler logs messages to either /var/log/syslog or /var/log/messages depending on which Linux distro you are using.
+
+Check that one of those files exists.
+
+If it doesn't run the command
+
+systemctl status rsyslog
+
+And you should see the following: Unit rsyslog.service could not be found.
+
+If you don't then you need to investigate that.
+
+If you do then run the following command
+
+systemctl start rsyslog
+
+If you get Failed to start rsyslog.service: Unit rsyslog.service not found.
+
+Then type
+
+which rsyslogd
+
+If you get no rsyslog in
+
+Then it needs to be installed
+
+fedora
+sudo dnf install rsyslog 
+
+debian/ubuntu
+sudo apt-get install rsyslog
+
+Then go back and type
+
+systemctl start rsyslog
+
+Then check that you have either /var/log/syslog or /var/log/messages
+
+run
+
+logger 'hello2'
+
+then cd /var/log/
+
+then run
+
+sudo cat messages | grep hello2
+
+or
+
+sudo cat syslog | grep hello2
+
+And you should see the hello2 message
+
 This is a video of what the program looks like when it runs: https://youtu.be/YC3ZaMMn42w
 
 
