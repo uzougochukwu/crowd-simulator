@@ -26,8 +26,6 @@ conspiracylength:	equ $-conspiracy
 injury:	db "This is the after action report. No fatalities reported, 4 minor injuries amongst guests.",0ah,"Should we cover this up?"
 injurylength:	equ $-injury
 
-logger: db `/usr/bin/logger\0`
-error_message: db "This is an error"
 
 	section .bss
 	answer resq 8
@@ -130,13 +128,8 @@ cover_up:
 
 exit:
 
-
 	call heap_init
 
-	mov rax, __NR_execve
-	mov rdi, logger
-	mov rsi, error_message
-	
 	mov rax, 0x3c
 	syscall
 
