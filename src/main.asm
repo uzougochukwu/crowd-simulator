@@ -20,8 +20,8 @@ conspiracylength:	equ $-conspiracy
 injury:	db "This is the after action report. No fatalities reported, 4 minor injuries amongst guests.",0ah,"Should we cover this up?"
 injurylength:	equ $-injury
 
-logger: db "/usr/bin/ls", 0
-message: db "-l", 0
+logger: db "/usr/bin/logger", 0
+message: db "This is a mistake", 0
 argv_array: dq logger, message, 0
 
 	section .bss

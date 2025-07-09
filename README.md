@@ -86,4 +86,14 @@ And you should see the hello2 message
 
 This is a video of what the program looks like when it runs: https://youtu.be/YC3ZaMMn42w
 
+The logger command now works, after you run ./game run
+
+sudo cat /var/log/messages | grep "This is a mistake"
+
+or
+
+sudo cat /var/log/syslog | grep "This is a mistake"
+
+
+And you should see "This is a mistake"
 
