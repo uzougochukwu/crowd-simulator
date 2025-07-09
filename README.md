@@ -24,7 +24,7 @@ If you want to modify the code and then run it, do git clone https://github.com/
 
 Then in the crowd-simulator folder run the following commands. Replace USER with your username.
 
-nasm -i/home/USER/crowd-simulator/ -felf64 -gdwarf ./src/*.asm -o ./src/game.o
+nasm -I/home/USER/crowd-simulator/ -felf64 -gdwarf ./src/*.asm -o ./src/game.o
 
 ld ./src/game.o -o game
 
