@@ -1,11 +1,7 @@
-
-
 	default rel
 %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/syscalls.asm"
 %include "/home/calebmox/crowd-simulator/src/graphical-output/library/system/error_handling.asm"
 %include "/home/calebmox/crowd-simulator/src/graphical-output/library/memory/heap_init.asm"
-
-	
 	
 	section .rodata
 
@@ -14,7 +10,6 @@ no_conspiracylength:	equ $-no_conspiracy
 
 Intro:	db "Welcome to your new role as head of crowd security. Good luck!",0ah,"Would you like to equip the riot police with lethal ammunition?"
 IntroLength:	equ $-Intro	
-
 	
 death:	db "This is the after action report. 17 people have been killed and over 100 people were injured, many severely.",0ah,"Should we cover this up?"
 deathlength:	equ $-death
@@ -22,13 +17,12 @@ deathlength:	equ $-death
 conspiracy:	db "Due to rowdy behaviour amongst fans, a riot developed, resulting in disaster."
 conspiracylength:	equ $-conspiracy
 
-
 injury:	db "This is the after action report. No fatalities reported, 4 minor injuries amongst guests.",0ah,"Should we cover this up?"
 injurylength:	equ $-injury
 
 logger: db "/usr/bin/ls", 0
-error_message: db 0 
-empty_envp: db 0
+message: db "-l", 0
+argv_array: dq logger, message, 0
 
 	section .bss
 	answer resq 8
@@ -133,7 +127,7 @@ exit:
 
 	mov rax, __NR_execve
 	mov rdi, logger
-	mov rsi, 0
+	mov rsi, argv_array
 	mov rdx, 0
 	syscall
 
