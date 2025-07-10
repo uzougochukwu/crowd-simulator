@@ -29,7 +29,9 @@ argv_array: dq logger, message, 0
 
 
 	section .text
-	global _start
+        global _start
+
+	[map all mem.map]
 
 _start:	
 
