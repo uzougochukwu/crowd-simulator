@@ -1,0 +1,7 @@
+possible-segfault-causes.txt
+possible-segfault-causes.txt~
+to-do.txt
+to-do.txt~
+Makefile~
+*.asm~
+*.o

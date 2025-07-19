@@ -28,10 +28,11 @@ argv_array: dq logger, message, 0
 	answer resq 8
 
 
+
 	section .text
         global _start
 
-	[map all mem.map]
+
 
 _start:	
 
