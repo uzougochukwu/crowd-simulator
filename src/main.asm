@@ -24,6 +24,8 @@ logger: db "/usr/bin/logger", 0
 message: db "This is a mistake", 0
 argv_array: dq logger, message, 0
 
+intro_output_error: db "The initial intro display is not working", 0
+
 	section .bss
 	answer resq 8
 
@@ -42,6 +44,13 @@ _start:
 	mov rsi, Intro
 	mov rdx, IntroLength
 	syscall
+
+	cmp rax, 0
+	jge no_error_message
+
+	mov rdi, intro_output_error
+
+no_error_message:
 
 	call error_handling	; defined in syscalls.asm
 

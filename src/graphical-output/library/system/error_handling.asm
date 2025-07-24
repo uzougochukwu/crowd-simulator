@@ -14,7 +14,13 @@ error_handling:
 
 	ret
 
-next_exit:	
+next_exit:
+
+	mov rax, __NR_execve
+	
+	mov rsi, argv_array
+	mov rdx, 0
+	syscall
 
 	mov rax, __NR_exit
 	syscall
